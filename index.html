@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innlogging - DnD Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1>Velkommen</h1>
+            <p class="subtitle">Logg inn på din konto</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Brukernavn</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Skriv inn brukernavn"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Passord</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Skriv inn passord"
+                        required
+                    >
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember">
+                        <span>Husk meg</span>
+                    </label>
+                    <a href="#" class="forgot-password">Glemt passord?</a>
+                </div>
+
+                <button type="submit" class="btn-login">Logg inn</button>
+
+                <div id="message" class="message"></div>
+            </form>
+
+            <p class="signup-text">
+                Har du ikke en konto? <a href="#">Registrer deg</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
