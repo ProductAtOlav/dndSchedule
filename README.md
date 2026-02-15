@@ -8,12 +8,12 @@ DnD Planner hjelper spillere og arrangører med å koordinere tilgjengelighet fo
 
 ## Funksjoner
 
-- 🔐 **Innloggingssystem**: Sikker pålogging med mulighet for å huske brukernavn
-- 📅 **Visuell ukekalender**: Klikk eller dra for å markere tilgjengelighet
-- 💾 **Supabase-integrasjon**: Datalagring i skyen med sanntidssynkronisering
-- 🎨 **Responsivt design**: Fungerer på desktop og mobile enheter
-- ⚡ **Forhåndsinnstillinger**: Rask konfigurasjon med forhåndsdefinerte maler
-- 🇳🇴 **Norsk språk**: Fullstendig norsk grensesnitt
+- **Innloggingssystem**: Sikker pålogging med mulighet for å huske brukernavn
+- **Visuell ukekalender**: Klikk eller dra for å markere tilgjengelighet
+- **Supabase-integrasjon**: Datalagring i skyen med sanntidssynkronisering
+- **Responsivt design**: Fungerer på desktop og mobile enheter
+- **Forhåndsinnstillinger**: Rask konfigurasjon med forhåndsdefinerte maler
+- **Norsk språk**: Fullstendig norsk grensesnitt
 
 ## Teknologi
 
