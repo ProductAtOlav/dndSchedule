@@ -103,14 +103,19 @@ function toggleSlot(slot, mode = null) {
         slot.classList.add('unavailable');
         availability[key] = false;
     } else {
-        // Toggle
+        // 3-state toggle: gray → green → red → gray
         if (slot.classList.contains('available')) {
+            // Green → Red
             slot.classList.remove('available');
             slot.classList.add('unavailable');
             availability[key] = false;
-        } else {
-            slot.classList.add('available');
+        } else if (slot.classList.contains('unavailable')) {
+            // Red → Gray (reset)
             slot.classList.remove('unavailable');
+            delete availability[key];
+        } else {
+            // Gray → Green
+            slot.classList.add('available');
             availability[key] = true;
         }
     }
@@ -149,8 +154,11 @@ function applyPreset(preset) {
                 break;
 
             case 'clear':
-                // Fjern alt
-                toggleSlot(slot, 'unavailable');
+                // Fjern alt (reset til grå)
+                slot.classList.remove('available');
+                slot.classList.remove('unavailable');
+                const clearKey = `${day}-${hour}`;
+                delete availability[clearKey];
                 break;
         }
     });
