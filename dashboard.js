@@ -1,6 +1,8 @@
 // Sjekk om bruker er logget inn
 const isLoggedIn = localStorage.getItem('isLoggedIn');
-if (!isLoggedIn) {
+const currentUsername = localStorage.getItem('rememberedUser') || localStorage.getItem('currentUser');
+
+if (!isLoggedIn || !currentUsername) {
     window.location.href = 'index.html';
 }
 
@@ -59,7 +61,7 @@ function generateCalendar() {
         calendar.appendChild(row);
     });
 
-    // Initialiser tilgjengelighet fra localStorage
+    // Initialiser tilgjengelighet fra Supabase
     loadAvailability();
 }
 
@@ -154,30 +156,76 @@ function applyPreset(preset) {
     });
 }
 
-// Lagre tilgjengelighet
-function saveAvailability() {
-    localStorage.setItem('availability', JSON.stringify(availability));
-    showNotification('Tilgjengelighet lagret!', 'success');
-}
+// Lagre tilgjengelighet til Supabase
+async function saveAvailability() {
+    try {
+        showNotification('Lagrer...', 'success');
 
-// Last inn tilgjengelighet
-function loadAvailability() {
-    const saved = localStorage.getItem('availability');
-    if (saved) {
-        availability = JSON.parse(saved);
-
-        // Oppdater UI
+        // Konverter availability-objektet til array med records
+        const records = [];
         Object.keys(availability).forEach(key => {
             const [day, hour] = key.split('-');
-            const slot = document.querySelector(`[data-day="${day}"][data-hour="${hour}"]`);
-            if (slot) {
-                if (availability[key]) {
-                    slot.classList.add('available');
-                } else {
-                    slot.classList.add('unavailable');
-                }
-            }
+            records.push({
+                username: currentUsername,
+                day_index: parseInt(day),
+                hour: parseInt(hour),
+                is_available: availability[key]
+            });
         });
+
+        // Slett eksisterende tilgjengelighet for brukeren
+        const { error: deleteError } = await supabaseClient
+            .from('availability')
+            .delete()
+            .eq('username', currentUsername);
+
+        if (deleteError) throw deleteError;
+
+        // Sett inn ny tilgjengelighet
+        const { error: insertError } = await supabaseClient
+            .from('availability')
+            .insert(records);
+
+        if (insertError) throw insertError;
+
+        showNotification('Tilgjengelighet lagret!', 'success');
+    } catch (error) {
+        console.error('Feil ved lagring:', error);
+        showNotification('Kunne ikke lagre. Sjekk konsollen for detaljer.', 'error');
+    }
+}
+
+// Last inn tilgjengelighet fra Supabase
+async function loadAvailability() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('availability')
+            .select('*')
+            .eq('username', currentUsername);
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            // Konverter data til availability-objekt
+            availability = {};
+            data.forEach(record => {
+                const key = `${record.day_index}-${record.hour}`;
+                availability[key] = record.is_available;
+
+                // Oppdater UI
+                const slot = document.querySelector(`[data-day="${record.day_index}"][data-hour="${record.hour}"]`);
+                if (slot) {
+                    if (record.is_available) {
+                        slot.classList.add('available');
+                    } else {
+                        slot.classList.add('unavailable');
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Feil ved lasting:', error);
+        showNotification('Kunne ikke laste tilgjengelighet. Sjekk konsollen for detaljer.', 'error');
     }
 }
 

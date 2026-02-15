@@ -54,8 +54,9 @@ loginForm.addEventListener('submit', function(e) {
             localStorage.removeItem('rememberedUser');
         }
 
-        // Lagre innloggingsstatus
+        // Lagre innloggingsstatus og current user
         localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', username);
 
         // Omdiriger til dashboard etter 2 sekunder
         setTimeout(() => {
