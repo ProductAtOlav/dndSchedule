@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anbefalte økter - DnD Planner</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">DnD Planner</div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link">Min tilgjengelighet</a>
+            <a href="group.html" class="nav-link">Gruppeoversikt</a>
+            <a href="sessions.html" class="nav-link active">Anbefalte økter</a>
+        </div>
+        <div class="nav-user">
+            <span id="userDisplay"></span>
+            <button id="switchUserBtn" class="btn-logout-small">Bytt bruker</button>
+        </div>
+    </nav>
+
+    <div class="availability-container">
+        <header class="header">
+            <h1>Anbefalte økter</h1>
+        </header>
+
+        <div class="session-config">
+            <h3>Innstillinger</h3>
+            <div class="config-row">
+                <label for="minPlayers">Minimum antall spillere (inkl. DM):</label>
+                <select id="minPlayers">
+                    <option value="3">3</option>
+                    <option value="4" selected>4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+            <div class="config-row">
+                <label for="sessionLength">Økt-lengde (timer):</label>
+                <select id="sessionLength">
+                    <option value="2">2 timer</option>
+                    <option value="3" selected>3 timer</option>
+                    <option value="4">4 timer</option>
+                </select>
+            </div>
+            <div class="config-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="requireDM" checked>
+                    <span>Krev at DM er tilgjengelig</span>
+                </label>
+            </div>
+            <button id="findSessionsBtn" class="btn-save">Finn økter</button>
+        </div>
+
+        <div id="sessionResults" class="session-results">
+            <!-- Fylles av sessions.js -->
+        </div>
+
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script src="supabase-config.js?v=6"></script>
+    <script src="avatars.js?v=6"></script>
+    <script src="auth-guard.js?v=6"></script>
+    <script src="sessions.js?v=6"></script>
+</body>
+</html>

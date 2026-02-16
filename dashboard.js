@@ -1,23 +1,16 @@
-// Sjekk om bruker er logget inn
-const isLoggedIn = localStorage.getItem('isLoggedIn');
-const currentUsername = localStorage.getItem('rememberedUser') || localStorage.getItem('currentUser');
-
-if (!isLoggedIn || !currentUsername) {
-    window.location.href = 'index.html';
-}
-
 // Konfigurasjon
 const days = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
 const hours = Array.from({ length: 15 }, (_, i) => i + 8); // 08:00 til 22:00
 let availability = {};
 let isDragging = false;
-let dragMode = null; // 'available' eller 'unavailable'
+let dragMode = null;
+let currentUser = null;
 
 // Generer kalender-grid
 function generateCalendar() {
     const calendar = document.getElementById('calendar');
 
-    // Legg til header-rad med dager
+    // Header-rad med dager
     const headerRow = document.createElement('div');
     headerRow.className = 'calendar-row header-row';
 
@@ -34,7 +27,7 @@ function generateCalendar() {
 
     calendar.appendChild(headerRow);
 
-    // Legg til tidslots
+    // Tidslots
     hours.forEach(hour => {
         const row = document.createElement('div');
         row.className = 'calendar-row';
@@ -50,7 +43,6 @@ function generateCalendar() {
             slot.dataset.day = dayIndex;
             slot.dataset.hour = hour;
 
-            // Event listeners for klikk og drag
             slot.addEventListener('mousedown', handleMouseDown);
             slot.addEventListener('mouseenter', handleMouseEnter);
             slot.addEventListener('mouseup', handleMouseUp);
@@ -61,7 +53,6 @@ function generateCalendar() {
         calendar.appendChild(row);
     });
 
-    // Initialiser tilgjengelighet fra Supabase
     loadAvailability();
 }
 
@@ -70,10 +61,7 @@ function handleMouseDown(e) {
     isDragging = true;
     const slot = e.target;
     const isAvailable = slot.classList.contains('available');
-
-    // Sett dragMode basert på nåværende tilstand
     dragMode = isAvailable ? 'unavailable' : 'available';
-
     toggleSlot(slot);
 }
 
@@ -88,7 +76,7 @@ function handleMouseUp() {
     dragMode = null;
 }
 
-// Toggle tilgjengelighet for en slot
+// Toggle tilgjengelighet for en slot (3-state)
 function toggleSlot(slot, mode = null) {
     const day = slot.dataset.day;
     const hour = slot.dataset.hour;
@@ -103,18 +91,15 @@ function toggleSlot(slot, mode = null) {
         slot.classList.add('unavailable');
         availability[key] = false;
     } else {
-        // 3-state toggle: gray → green → red → gray
+        // 3-state toggle: grå → grønn → rød → grå
         if (slot.classList.contains('available')) {
-            // Green → Red
             slot.classList.remove('available');
             slot.classList.add('unavailable');
             availability[key] = false;
         } else if (slot.classList.contains('unavailable')) {
-            // Red → Gray (reset)
             slot.classList.remove('unavailable');
             delete availability[key];
         } else {
-            // Gray → Green
             slot.classList.add('available');
             availability[key] = true;
         }
@@ -131,30 +116,23 @@ function applyPreset(preset) {
 
         switch(preset) {
             case 'work':
-                // Mandag-Fredag, 09:00-17:00
                 if (day < 5 && hour >= 9 && hour < 17) {
                     toggleSlot(slot, 'available');
                 } else {
                     toggleSlot(slot, 'unavailable');
                 }
                 break;
-
             case 'evening':
-                // Alle dager, 18:00-22:00
                 if (hour >= 18 && hour < 22) {
                     toggleSlot(slot, 'available');
                 } else {
                     toggleSlot(slot, 'unavailable');
                 }
                 break;
-
             case 'all':
-                // Alle tider tilgjengelige
                 toggleSlot(slot, 'available');
                 break;
-
             case 'clear':
-                // Fjern alt (reset til grå)
                 slot.classList.remove('available');
                 slot.classList.remove('unavailable');
                 const clearKey = `${day}-${hour}`;
@@ -169,32 +147,30 @@ async function saveAvailability() {
     try {
         showNotification('Lagrer...', 'success');
 
-        // Konverter availability-objektet til array med records
         const records = [];
         Object.keys(availability).forEach(key => {
             const [day, hour] = key.split('-');
             records.push({
-                username: currentUsername,
+                user_id: currentUser.id,
                 day_index: parseInt(day),
                 hour: parseInt(hour),
                 is_available: availability[key]
             });
         });
 
-        // Slett eksisterende tilgjengelighet for brukeren
         const { error: deleteError } = await supabaseClient
             .from('availability')
             .delete()
-            .eq('username', currentUsername);
+            .eq('user_id', currentUser.id);
 
         if (deleteError) throw deleteError;
 
-        // Sett inn ny tilgjengelighet
-        const { error: insertError } = await supabaseClient
-            .from('availability')
-            .insert(records);
-
-        if (insertError) throw insertError;
+        if (records.length > 0) {
+            const { error: insertError } = await supabaseClient
+                .from('availability')
+                .insert(records);
+            if (insertError) throw insertError;
+        }
 
         showNotification('Tilgjengelighet lagret!', 'success');
     } catch (error) {
@@ -209,18 +185,16 @@ async function loadAvailability() {
         const { data, error } = await supabaseClient
             .from('availability')
             .select('*')
-            .eq('username', currentUsername);
+            .eq('user_id', currentUser.id);
 
         if (error) throw error;
 
         if (data && data.length > 0) {
-            // Konverter data til availability-objekt
             availability = {};
             data.forEach(record => {
                 const key = `${record.day_index}-${record.hour}`;
                 availability[key] = record.is_available;
 
-                // Oppdater UI
                 const slot = document.querySelector(`[data-day="${record.day_index}"][data-hour="${record.hour}"]`);
                 if (slot) {
                     if (record.is_available) {
@@ -233,7 +207,7 @@ async function loadAvailability() {
         }
     } catch (error) {
         console.error('Feil ved lasting:', error);
-        showNotification('Kunne ikke laste tilgjengelighet. Sjekk konsollen for detaljer.', 'error');
+        showNotification('Kunne ikke laste tilgjengelighet.', 'error');
     }
 }
 
@@ -243,34 +217,26 @@ function showNotification(message, type) {
     notification.textContent = message;
     notification.className = `notification ${type}`;
     notification.style.display = 'block';
-
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 3000);
+    setTimeout(() => { notification.style.display = 'none'; }, 3000);
 }
 
-// Event listeners
+// Init
 document.addEventListener('DOMContentLoaded', function() {
+    currentUser = getCurrentUser();
+    if (!currentUser) return;
+
+    document.getElementById('userDisplay').textContent = currentUser.name;
+    document.getElementById('switchUserBtn').addEventListener('click', switchUser);
+
     generateCalendar();
 
-    // Forhåndsinnstillinger
     document.querySelectorAll('.preset-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            const preset = this.dataset.preset;
-            applyPreset(preset);
+            applyPreset(this.dataset.preset);
         });
     });
 
-    // Lagre-knapp
     document.getElementById('saveBtn').addEventListener('click', saveAvailability);
-
-    // Logg ut-knapp
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.removeItem('isLoggedIn');
-        window.location.href = 'index.html';
-    });
-
-    // Forhindre drag-standard oppførsel
     document.addEventListener('mouseup', handleMouseUp);
 });
 

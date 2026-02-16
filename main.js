@@ -1,93 +1,54 @@
-// Hent elementer fra DOM
-const loginForm = document.getElementById('loginForm');
-const usernameInput = document.getElementById('username');
-const passwordInput = document.getElementById('password');
-const rememberCheckbox = document.getElementById('remember');
-const messageDiv = document.getElementById('message');
-
-// Funksjon for å vise meldinger
-function showMessage(text, type) {
-    messageDiv.textContent = text;
-    messageDiv.className = `message ${type}`;
-    messageDiv.style.display = 'block';
-
-    // Skjul melding etter 5 sekunder
-    setTimeout(() => {
-        messageDiv.style.display = 'none';
-    }, 5000);
+// Sjekk om bruker allerede er valgt
+const currentUserId = localStorage.getItem('currentUserId');
+if (currentUserId) {
+    window.location.href = 'dashboard.html';
 }
 
-// Funksjon for å validere innlogging
-function validateLogin(username, password) {
-    // Her kan du legge til ekte validering mot en backend senere
-    // For nå bruker vi dummy-data
-    const validUsers = {
-        'admin': 'admin123',
-        'bruker': 'passord123'
-    };
+// Hent og vis alle profiler som avatar-kort
+async function loadProfiles() {
+    const { data: profiles, error } = await supabaseClient
+        .from('profiles')
+        .select('id, display_name, role, avatar')
+        .order('created_at', { ascending: true });
 
-    return validUsers[username] === password;
-}
-
-// Håndter innlogging
-loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
-    const remember = rememberCheckbox.checked;
-
-    // Enkel validering
-    if (!username || !password) {
-        showMessage('Vennligst fyll ut alle feltene', 'error');
+    if (error) {
+        console.error('Feil ved henting av profiler:', error);
         return;
     }
 
-    // Valider innlogging
-    if (validateLogin(username, password)) {
-        showMessage('Innlogging vellykket! Omdirigerer...', 'success');
+    const grid = document.getElementById('avatarGrid');
+    const emptyState = document.getElementById('emptyState');
 
-        // Lagre brukernavn hvis "Husk meg" er valgt
-        if (remember) {
-            localStorage.setItem('rememberedUser', username);
-        } else {
-            localStorage.removeItem('rememberedUser');
-        }
-
-        // Lagre innloggingsstatus og current user
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('currentUser', username);
-
-        // Omdiriger til dashboard etter 2 sekunder
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 2000);
-
-    } else {
-        showMessage('Feil brukernavn eller passord', 'error');
-        passwordInput.value = '';
-        passwordInput.focus();
+    if (!profiles || profiles.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
     }
-});
 
-// Sjekk om brukernavn er lagret når siden lastes
-window.addEventListener('DOMContentLoaded', function() {
-    const rememberedUser = localStorage.getItem('rememberedUser');
-    if (rememberedUser) {
-        usernameInput.value = rememberedUser;
-        rememberCheckbox.checked = true;
-        passwordInput.focus();
-    }
-});
+    grid.innerHTML = '';
+    profiles.forEach(profile => {
+        const card = document.createElement('div');
+        card.className = 'avatar-card';
+        card.addEventListener('click', () => selectUser(profile));
 
-// Legg til animasjon på input-felt
-[usernameInput, passwordInput].forEach(input => {
-    input.addEventListener('focus', function() {
-        this.parentElement.style.transform = 'scale(1.02)';
-        this.parentElement.style.transition = 'transform 0.2s';
+        const isDM = profile.role === 'dm';
+
+        card.innerHTML =
+            getAvatarSVG(profile.avatar || 0, 50) +
+            '<div class="avatar-name">' + profile.display_name + '</div>' +
+            (isDM ? '<span class="avatar-dm-badge">DM</span>' : '');
+
+        grid.appendChild(card);
     });
+}
 
-    input.addEventListener('blur', function() {
-        this.parentElement.style.transform = 'scale(1)';
-    });
-});
+// Velg bruker og gå videre
+function selectUser(profile) {
+    localStorage.setItem('currentUserId', profile.id);
+    localStorage.setItem('currentUserName', profile.display_name);
+    localStorage.setItem('currentUserRole', profile.role);
+    localStorage.setItem('currentUserAvatar', profile.avatar || 0);
+    window.location.href = 'dashboard.html';
+}
+
+loadProfiles();

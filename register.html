@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ny spiller - DnD Planner</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container picker-container">
+        <div class="login-box picker-box">
+            <h1>Ny spiller</h1>
+            <p class="subtitle">Opprett din profil</p>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="displayName">Navn</label>
+                    <input type="text" id="displayName" placeholder="Ditt navn" required minlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label>Velg avatar</label>
+                    <div id="avatarPicker" class="avatar-picker">
+                        <!-- Fylles av register.js -->
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isDM">
+                        <span>Jeg er Dungeon Master (DM)</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-login">Opprett</button>
+
+                <div id="message" class="message"></div>
+            </form>
+
+            <p class="signup-text">
+                <a href="index.html">Tilbake til velg spiller</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="supabase-config.js?v=6"></script>
+    <script src="avatars.js?v=6"></script>
+    <script src="register.js?v=6"></script>
+</body>
+</html>

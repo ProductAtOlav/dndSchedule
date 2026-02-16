@@ -3,57 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innlogging - DnD Planner</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>DnD Planner</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="login-box">
-            <h1>Velkommen</h1>
-            <p class="subtitle">Logg inn på din konto</p>
+    <div class="container picker-container">
+        <div class="login-box picker-box">
+            <h1>Hvem er du?</h1>
+            <p class="subtitle">Velg din profil for å fortsette</p>
 
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Brukernavn</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="Skriv inn brukernavn"
-                        required
-                    >
-                </div>
+            <div id="avatarGrid" class="avatar-grid">
+                <!-- Fylles av main.js -->
+            </div>
 
-                <div class="form-group">
-                    <label for="password">Passord</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Skriv inn passord"
-                        required
-                    >
-                </div>
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <p>Ingen spillere ennå. Opprett den første!</p>
+            </div>
 
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="remember">
-                        <span>Husk meg</span>
-                    </label>
-                    <a href="#" class="forgot-password">Glemt passord?</a>
-                </div>
+            <div id="message" class="message"></div>
 
-                <button type="submit" class="btn-login">Logg inn</button>
-
-                <div id="message" class="message"></div>
-            </form>
-
-            <p class="signup-text">
-                Har du ikke en konto? <a href="#">Registrer deg</a>
-            </p>
+            <a href="register.html" class="btn-new-player">+ Opprett ny spiller</a>
         </div>
     </div>
 
-    <script src="main.js?v=2"></script>
+    <script src="supabase-config.js?v=6"></script>
+    <script src="avatars.js?v=6"></script>
+    <script src="main.js?v=6"></script>
 </body>
 </html>

@@ -8,6 +8,9 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+}
+
+body:has(.container) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -472,5 +475,397 @@ input[type="password"]:focus {
     .legend {
         flex-direction: column;
         gap: 10px;
+    }
+}
+
+/* ========================= */
+/* V3: Avatar-velger           */
+/* ========================= */
+.picker-container {
+    max-width: 500px;
+}
+
+.picker-box {
+    padding: 40px 30px;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.avatar-card {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.avatar-card:hover {
+    border-color: #667eea;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.avatar-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+}
+
+.avatar-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.avatar-dm-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 8px;
+}
+
+.btn-new-player {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: #667eea;
+    border: 2px dashed #667eea;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-new-player:hover {
+    background: #667eea;
+    color: white;
+    border-style: solid;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 30px 0;
+    color: #999;
+    font-size: 14px;
+}
+
+/* ========================= */
+/* V2: Navigasjonsbar         */
+/* ========================= */
+.main-nav {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px;
+    max-width: 1200px;
+    margin: 0 auto 20px auto;
+}
+
+.nav-brand {
+    font-size: 20px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.nav-links {
+    display: flex;
+    gap: 5px;
+}
+
+.nav-link {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #666;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* ========================= */
+/* V2: Gruppe-varmekart        */
+/* ========================= */
+.group-slot {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.heat-0 {
+    background: #f0f0f0 !important;
+    color: #999 !important;
+    text-shadow: none !important;
+}
+
+.heat-1 {
+    background: #fbbf24 !important;
+}
+
+.heat-2 {
+    background: #fb923c !important;
+}
+
+.heat-3 {
+    background: #4ade80 !important;
+}
+
+.legend-color.heat-0 { background: #f0f0f0; }
+.legend-color.heat-1 { background: #fbbf24; }
+.legend-color.heat-2 { background: #fb923c; }
+.legend-color.heat-3 { background: #4ade80; }
+
+.member-filter {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.member-filter h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.member-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.member-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+}
+
+.member-count {
+    font-size: 14px;
+    color: #666;
+}
+
+.slot-detail {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.slot-detail h3 {
+    font-size: 16px;
+    color: #333;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.slot-detail ul {
+    list-style: none;
+    padding: 0;
+}
+
+.slot-detail li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #555;
+}
+
+.slot-detail li:last-child {
+    border-bottom: none;
+}
+
+/* ========================= */
+/* V2: Økt-anbefalinger        */
+/* ========================= */
+.session-config {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.session-config h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.config-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.config-row label {
+    margin-bottom: 0;
+}
+
+.config-row select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.session-results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.session-card {
+    background: white;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.session-rank {
+    font-size: 24px;
+    font-weight: 700;
+    color: #999;
+    min-width: 50px;
+    text-align: center;
+}
+
+.rank-gold { color: #f59e0b; }
+.rank-silver { color: #9ca3af; }
+.rank-bronze { color: #b45309; }
+
+.session-info h3 {
+    font-size: 16px;
+    color: #333;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.player-count {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.player-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.player-tag {
+    padding: 3px 10px;
+    background: #e0e7ff;
+    color: #4338ca;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.dm-tag {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.no-results {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.no-results h3 {
+    color: #666;
+}
+
+.no-results p {
+    color: #999;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* ========================= */
+/* V2: Responsiv navigasjon    */
+/* ========================= */
+@media (max-width: 768px) {
+    .main-nav {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .session-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .config-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
     }
 }

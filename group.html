@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gruppeoversikt - DnD Planner</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">DnD Planner</div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link">Min tilgjengelighet</a>
+            <a href="group.html" class="nav-link active">Gruppeoversikt</a>
+            <a href="sessions.html" class="nav-link">Anbefalte økter</a>
+        </div>
+        <div class="nav-user">
+            <span id="userDisplay"></span>
+            <button id="switchUserBtn" class="btn-logout-small">Bytt bruker</button>
+        </div>
+    </nav>
+
+    <div class="availability-container">
+        <header class="header">
+            <h1>Gruppeoversikt</h1>
+            <div class="member-count">
+                <span id="memberCount">0</span> medlemmer registrert
+            </div>
+        </header>
+
+        <div class="member-filter">
+            <h3>Vis spillere:</h3>
+            <div id="memberCheckboxes" class="member-checkboxes">
+                <!-- Genereres dynamisk -->
+            </div>
+        </div>
+
+        <div class="calendar-wrapper">
+            <div class="calendar-grid" id="groupCalendar">
+                <!-- Genereres dynamisk -->
+            </div>
+        </div>
+
+        <div class="legend group-legend">
+            <div class="legend-item">
+                <span class="legend-color heat-0"></span>
+                <span>Ingen</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color heat-1"></span>
+                <span>1-2 spillere</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color heat-2"></span>
+                <span>3-4 spillere</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color heat-3"></span>
+                <span>5+ spillere</span>
+            </div>
+        </div>
+
+        <div id="slotDetail" class="slot-detail" style="display:none;">
+            <h3 id="slotDetailTitle"></h3>
+            <ul id="slotDetailList"></ul>
+        </div>
+
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script src="supabase-config.js?v=6"></script>
+    <script src="avatars.js?v=6"></script>
+    <script src="auth-guard.js?v=6"></script>
+    <script src="group.js?v=6"></script>
+</body>
+</html>
