@@ -15,8 +15,7 @@ function renderAvatarPicker() {
     COWBOY_AVATARS.forEach(function(avatar, index) {
         const option = document.createElement('div');
         option.className = 'avatar-option' + (index === 0 ? ' selected' : '');
-        option.innerHTML = getAvatarSVG(index, 50) +
-            '<span class="avatar-option-label">' + avatar.label + '</span>';
+        option.innerHTML = getAvatarSVG(index, 44);
         option.addEventListener('click', function() {
             document.querySelectorAll('.avatar-option').forEach(function(el) {
                 el.classList.remove('selected');
@@ -45,10 +44,9 @@ registerForm.addEventListener('submit', async function(e) {
     const { data: existing } = await supabaseClient
         .from('profiles')
         .select('display_name')
-        .eq('display_name', displayName)
-        .single();
+        .eq('display_name', displayName);
 
-    if (existing) {
+    if (existing && existing.length > 0) {
         showMessage('Dette navnet er allerede tatt', 'error');
         return;
     }

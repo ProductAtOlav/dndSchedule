@@ -490,10 +490,11 @@ input[type="password"]:focus {
 }
 
 .avatar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     margin: 25px 0;
+    justify-content: center;
 }
 
 .avatar-card {
@@ -572,6 +573,42 @@ input[type="password"]:focus {
     padding: 30px 0;
     color: #999;
     font-size: 14px;
+}
+
+/* Avatar picker (registration) */
+.avatar-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.avatar-option {
+    width: 56px;
+    height: 56px;
+    border: 3px solid #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 3px;
+}
+
+.avatar-option:hover {
+    border-color: #667eea;
+    transform: scale(1.1);
+}
+
+.avatar-option.selected {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.avatar-option .avatar-svg {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* ========================= */
@@ -841,6 +878,127 @@ input[type="password"]:focus {
     color: #999;
     margin-top: 10px;
     font-size: 14px;
+}
+
+/* Edit avatar button on profile cards */
+.btn-edit-avatar {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    background: #667eea;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.avatar-card:hover .btn-edit-avatar {
+    opacity: 1;
+}
+
+.btn-edit-avatar:hover {
+    background: #764ba2;
+}
+
+/* Avatar editor overlay */
+.avatar-editor-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.avatar-editor {
+    background: white;
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    max-width: 360px;
+    width: 90%;
+}
+
+.avatar-editor-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.btn-delete-player {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 10px;
+    background: none;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-delete-player:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-nav-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: #f0f0f0;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.btn-nav-icon:hover {
+    background: #667eea;
+    color: white;
+}
+
+.profile-editor-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.profile-editor-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+}
+
+.profile-editor-checkbox input {
+    cursor: pointer;
 }
 
 /* ========================= */
