@@ -5,6 +5,22 @@ let availability = {};
 let isDragging = false;
 let dragMode = null;
 let currentUser = null;
+let savedSnapshot = null; // null = not loaded yet
+
+// Sorted fingerprint for reliable comparison
+function availabilityFingerprint(obj) {
+    return JSON.stringify(Object.keys(obj).sort().map(function(k) { return k + ':' + obj[k]; }));
+}
+
+function checkDirtyState() {
+    if (savedSnapshot === null) return; // not loaded yet
+    var current = availabilityFingerprint(availability);
+    if (current !== savedSnapshot) {
+        if (window.fabShowSave) window.fabShowSave();
+    } else {
+        if (window.fabHideSave) window.fabHideSave();
+    }
+}
 
 // Generer kalender-grid
 function generateCalendar() {
@@ -72,8 +88,11 @@ function handleMouseEnter(e) {
 }
 
 function handleMouseUp() {
-    isDragging = false;
-    dragMode = null;
+    if (isDragging) {
+        isDragging = false;
+        dragMode = null;
+        checkDirtyState();
+    }
 }
 
 // Toggle tilgjengelighet for en slot (3-state)
@@ -103,6 +122,7 @@ function toggleSlot(slot, mode = null) {
             slot.classList.add('available');
             availability[key] = true;
         }
+        checkDirtyState();
     }
 }
 
@@ -140,6 +160,8 @@ function applyPreset(preset) {
                 break;
         }
     });
+
+    checkDirtyState();
 }
 
 // Lagre tilgjengelighet til Supabase
@@ -173,6 +195,8 @@ async function saveAvailability() {
         }
 
         showNotification('Tilgjengelighet lagret!', 'success');
+        savedSnapshot = availabilityFingerprint(availability);
+        checkDirtyState();
     } catch (error) {
         console.error('Feil ved lagring:', error);
         showNotification('Kunne ikke lagre. Sjekk konsollen for detaljer.', 'error');
@@ -205,6 +229,8 @@ async function loadAvailability() {
                 }
             });
         }
+
+        savedSnapshot = availabilityFingerprint(availability);
     } catch (error) {
         console.error('Feil ved lasting:', error);
         showNotification('Kunne ikke laste tilgjengelighet.', 'error');
@@ -236,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    document.getElementById('saveBtn').addEventListener('click', saveAvailability);
+    document.addEventListener('fab:save', saveAvailability);
     document.addEventListener('mouseup', handleMouseUp);
 });
 

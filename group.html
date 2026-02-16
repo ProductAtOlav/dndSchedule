@@ -4,24 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gruppeoversikt - DnD Planner</title>
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=7">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-brand">DnD Planner</div>
-        <div class="nav-links">
-            <a href="dashboard.html" class="nav-link">Min tilgjengelighet</a>
-            <a href="group.html" class="nav-link active">Gruppeoversikt</a>
-            <a href="sessions.html" class="nav-link">Anbefalte økter</a>
-        </div>
-        <div class="nav-user">
-            <span id="userDisplay"></span>
-            <button id="editProfileBtn" class="btn-nav-icon" title="Rediger profil">&#9998;</button>
-            <button id="switchUserBtn" class="btn-logout-small">Bytt bruker</button>
-        </div>
-    </nav>
-
     <div class="availability-container">
         <header class="header">
             <h1>Gruppeoversikt</h1>
@@ -70,9 +56,10 @@
         <div id="notification" class="notification"></div>
     </div>
 
-    <script src="supabase-config.js?v=6"></script>
-    <script src="avatars.js?v=6"></script>
-    <script src="auth-guard.js?v=6"></script>
-    <script src="group.js?v=6"></script>
+    <script src="supabase-config.js?v=7"></script>
+    <script src="avatars.js?v=7"></script>
+    <script src="fab.js?v=7"></script>
+    <script src="auth-guard.js?v=7"></script>
+    <script src="group.js?v=7"></script>
 </body>
 </html>
